@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     $("#submitBtn").on("click", function (event) {
         event.preventDefault();
-        alert("holla");
+        alert("Employee added");
 
         // Grabbed values from text boxes
         name = $("#enterName").val().trim();
@@ -34,10 +34,35 @@ $(document).ready(function () {
         database.ref().push({
             name: name,
             role: role,
-            date: date,
-            rate: rate,
+            startDate: startDate,
+            monthlyRate: monthlyRate,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP //unix time
         });
 
+    });
+
+    database.ref().on("child_added", function (snapshot) {
+        // storing the snapshot.val() in a variable for convenience
+        var sv = snapshot.val();
+
+
+        var newRow = $("<tr>").append(
+            $("<td>").text(name),
+            $("<td>").text(role),
+            $("<td>").text(startDate),
+            $("<td>").text(""),
+            $("<td>").text(monthlyRate),
+            $("<td>").text("")
+        );
+
+    
+        $("#tableId>tbody").append(newRow);
+
+
+
+        // Handle the errors
+    }, function (errorObject) {
+        console.log("Errors handled: " + errorObject.code);
     });
 
 });
